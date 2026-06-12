@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yahya Shaikh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --off-white: #f4f4f6;
+      --silver-light: #e4e4e8;
+      --chrome: #d0d0d8;
+      --text-primary: #0a0a0f;
+      --text-secondary: #55556a;
+      --text-muted: #9999aa;
+      --glass: rgba(255,255,255,0.55);
+      --glass-strong: rgba(255,255,255,0.72);
+      --glass-border: rgba(255,255,255,0.82);
+      --glass-shadow: 0 8px 40px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.95) inset;
+      --accent: #5b5bd6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--off-white);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; top: -20%; left: -10%;
+      width: 60%; height: 60%;
+      background: radial-gradient(ellipse, rgba(180,180,220,0.2) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed; bottom: -10%; right: -10%;
+      width: 50%; height: 50%;
+      background: radial-gradient(ellipse, rgba(160,160,200,0.14) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 20px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 10px 24px;
+      display: flex; align-items: center; gap: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,1) inset;
+      white-space: nowrap;
+    }
+    .nav-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+    nav ul { display: flex; gap: 22px; list-style: none; }
+    nav ul a {
+      font-size: 0.82rem; font-weight: 400;
+      color: var(--text-secondary); text-decoration: none;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--text-primary); }
+
+    /* ── PREVIEW BUBBLES — simple absolute, no JS needed ── */
+    .nav-pw { position: relative; }
+
+    .nav-pw .pb {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      width: 240px;
+      background: rgba(210, 212, 220, 0.5);
+      backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
+      -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
+      border: 1px solid rgba(255,255,255,0.78);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 36px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.9) inset;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 2000;
+      font-size: 0.75rem;
+      color: rgba(30,30,50,0.82);
+      line-height: 1.58;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    /* arrow */
+    .nav-pw .pb::before {
+      content: '';
+      position: absolute; top: -6px; left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 10px; height: 10px;
+      background: rgba(218,220,228,0.7);
+      border-left: 1px solid rgba(255,255,255,0.75);
+      border-top: 1px solid rgba(255,255,255,0.75);
+    }
+
+    .nav-pw:hover .pb {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .pb .pt {
+      font-weight: 600; font-size: 0.78rem;
+      color: rgba(10,10,20,0.88); margin-bottom: 4px;
+    }
+
+    /* keep bubbles from going off right edge */
+    .nav-pw:last-child .pb,
+    .nav-pw:nth-last-child(2) .pb {
+      left: auto; right: 0;
+      transform: translateY(4px);
+    }
+    .nav-pw:last-child .pb::before,
+    .nav-pw:nth-last-child(2) .pb::before {
+      left: auto; right: 20px;
+    }
+    .nav-pw:last-child:hover .pb,
+    .nav-pw:nth-last-child(2):hover .pb {
+      transform: translateY(0);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 24px 60px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      align-items: center;
+      max-width: 860px;
+      width: 100%;
+    }
+
+    /* Glass card */
+    .hero-card {
+      background: var(--glass);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 44px 44px 40px;
+      box-shadow: var(--glass-shadow);
+      position: relative;
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,1), transparent);
+      border-radius: 28px 28px 0 0;
+    }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--text-muted); letter-spacing: 0.09em;
+      text-transform: uppercase; margin-bottom: 18px;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #5bd65b; box-shadow: 0 0 6px #5bd65b;
+      animation: pg 2s infinite; flex-shrink: 0;
+    }
+    @keyframes pg { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .hero-name {
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      font-weight: 300; letter-spacing: -0.03em;
+      line-height: 1.08; color: var(--text-primary); margin-bottom: 14px;
+    }
+    .hero-name span { font-weight: 600; }
+
+    .hero-tagline {
+      font-size: 0.93rem; color: var(--text-secondary);
+      line-height: 1.72; margin-bottom: 28px;
+    }
+    .hero-tagline em { font-style: normal; color: var(--text-primary); font-weight: 500; }
+
+    .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ── PHOTO FRAME — fixed size, never changes ── */
+    .photo-frame {
+      width: 300px;
+      height: 380px;
+      flex-shrink: 0;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);F
+      box-shadow: 0 16px 48px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
+      background: #1a1a22;
+      position: relative;
+    }
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      filter: grayscale(8%);
+    }
+    /* subtle inner shadow to blend bottom */
+    .photo-frame::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(10,10,18,0.25) 100%);
+      pointer-events: none;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; font-family: inherit;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: all 0.2s ease; letter-spacing: 0.01em;
+    }
+    .btn.solid {
+      background: var(--text-primary); color: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+    .btn.solid:hover { background: #1a1a2a; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.28); }
+    .btn.glass {
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.85);
+      color: var(--text-primary);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .btn.glass:hover { background: rgba(255,255,255,0.88); transform: translateY(-1px); }
+    .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    /* ── CONTENT ── */
+    .wrap { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+    .sec-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sec-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--silver-light), transparent);
+    }
+
+    /* ABOUT */
+    .about-sec { padding: 80px 0; }
+    .about-card {
+      background: var(--glass-strong);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--glass-border); border-radius: 24px;
+      padding: 40px; box-shadow: var(--glass-shadow);
+    }
+    .about-card p { font-size: 0.96rem; line-height: 1.78; color: var(--text-secondary); max-width: 620px; }
+    .about-card p + p { margin-top: 14px; }
+    .about-card p em { font-style: normal; color: var(--text-primary); font-weight: 500; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+    .tag {
+      font-size: 0.73rem; font-weight: 500; padding: 5px 12px;
+      border-radius: 100px; background: rgba(0,0,0,0.04);
+      border: 1px solid var(--silver-light); color: var(--text-secondary);
+    }
+
+    /* PROJECTS */
+    .proj-sec { padding: 80px 0; }
+    .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .proj-card {
+      background: var(--glass);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--glass-border); border-radius: 20px;
+      padding: 26px; box-shadow: var(--glass-shadow);
+      transition: all 0.22s ease; position: relative; overflow: hidden;
+    }
+    .proj-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+    }
+    .proj-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.82); box-shadow: 0 16px 48px rgba(0,0,0,0.11); }
+    .proj-card.full { grid-column: span 2; }
+
+    .proj-icon {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: linear-gradient(145deg, var(--silver-light), var(--chrome));
+      border: 1px solid rgba(255,255,255,0.8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .proj-title { font-size: 0.97rem; font-weight: 600; color: var(--text-primary); margin-bottom: 7px; letter-spacing: -0.01em; }
+    .proj-desc { font-size: 0.82rem; line-height: 1.6; color: var(--text-secondary); }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 14px; }
+    .ptag {
+      font-size: 0.67rem; font-weight: 500; padding: 3px 9px;
+      border-radius: 100px; background: rgba(0,0,0,0.04);
+      border: 1px solid var(--silver-light); color: var(--text-muted);
+    }
+    .proj-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 12px; font-size: 0.77rem; font-weight: 500;
+      color: var(--accent); text-decoration: none; transition: opacity 0.2s;
+    }
+    .proj-link:hover { opacity: 0.7; }
+    .proj-link svg { width: 11px; height: 11px; }
+
+    /* CONNECT */
+    .contact-sec { padding: 80px 0 120px; }
+    .contact-card {
+      background: var(--glass-strong);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--glass-border); border-radius: 24px;
+      padding: 52px 40px; box-shadow: var(--glass-shadow);
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .contact-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+    }
+    .contact-card h2 { font-size: 1.8rem; font-weight: 300; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .contact-card h2 span { font-weight: 600; }
+    .contact-card p { font-size: 0.9rem; color: var(--text-secondary); max-width: 340px; margin: 0 auto 30px; line-height: 1.6; }
+    .contact-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    .divider {
+      height: 1px; position: relative; z-index: 1;
+      background: linear-gradient(to right, transparent, var(--silver-light), transparent);
+      max-width: 860px; margin: 0 auto;
+    }
+
+    footer {
+      position: relative; z-index: 1; text-align: center;
+      padding: 24px; font-size: 0.72rem; color: var(--text-muted);
+      border-top: 1px solid var(--silver-light);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 28px; }
+      .photo-frame { width: 100%; height: 260px; }
+      .proj-grid { grid-template-columns: 1fr; }
+      .proj-card.full { grid-column: span 1; }
+      nav .nav-name { display: none; }
+      nav { padding: 8px 16px; gap: 14px; top: 10px; }
+      nav ul { gap: 12px; }
+      .hero-card { padding: 28px 22px; }
+      .contact-card { padding: 32px 22px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-name">Yahya Shaikh</span>
+    <ul>
+      <li class="nav-pw">
+        <a href="#about">About</a>
+        <div class="pb"><div class="pt">About me</div>Fresh grad, home labber, GenAI enthusiast. Calm under pressure, chaotic by nature.</div>
+      </li>
+      <li class="nav-pw">
+        <a href="#projects">Projects</a>
+        <div class="pb"><div class="pt">Projects</div>From encrypted mesh apps to self-hosted clouds — things I actually built.</div>
+      </li>
+      <li class="nav-pw">
+        <a href="https://github.com/greekyahya" target="_blank" rel="noopener">GitHub</a>
+        <div class="pb"><div class="pt">GitHub</div>Source code, experiments, and whatever I'm tinkering with this week.</div>
+      </li>
+      <li class="nav-pw">
+        <a href="https://www.linkedin.com/in/mohammed-yahyaebrahim-shaikh-1897a327b/" target="_blank" rel="noopener">LinkedIn</a>
+        <div class="pb"><div class="pt">LinkedIn</div>Professional profile, experience, and certifications.</div>
+      </li>
+      <li class="nav-pw">
+        <a href="#contact">Contact</a>
+        <div class="pb"><div class="pt">Get in touch</div>greekyahya@gmail.com — always open to interesting conversations.</div>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <div class="hero-card">
+        <div class="eyebrow"><span class="dot"></span>IT Graduate &middot; Mumbai, India</div>
+        <h1 class="hero-name">Mohd. Yahya<br><span>Ebrahim Shaikh</span></h1>
+        <p class="hero-tagline">
+          BSc IT graduate from SNGC, University of Mumbai.
+          <em>Aspiring cybersecurity professional</em> and compulsive home labber.
+          I build things for the fun of it — sometimes they're secure, always they're interesting.
+        </p>
+        <div class="hero-btns">
+          <a href="#projects" class="btn solid">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+            View Projects
+          </a>
+          <a href="mailto:greekyahya@gmail.com" class="btn glass">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 5l7 5 7-5"/></svg>
+            Get in Touch
+          </a>
+          <a href="Yahya_Resume.pdf" download class="btn glass">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M2 12h12"/></svg>
+            Resume
+          </a>
+        </div>
+      </div>
+
+      <!-- FIXED SIZE PHOTO FRAME -->
+      <div class="photo-frame">
+        <img src="/yahya.jpg" alt="Mohd. Yahya Ebrahim Shaikh" />
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <div class="wrap">
+    <section class="about-sec" id="about">
+      <div class="sec-label">About</div>
+      <div class="about-card">
+        <p>I'm a fresh BSc IT graduate affiliated to  University of Mumbai. My focus is cybersecurity — but I got here through curiosity, not a checklist. I home-lab because I find it <em>genuinely fun</em>, I'm embarrassingly into generative AI, and I have a habit of repurposing old hardware into things that probably shouldn't work but do.</p>
+        <p>I'm either very calm or very all-over-the-place, rarely anything in between. Either way, I don't fold under pressure — I tend to get <em>more focused</em> when things get messy. I speak five languages, hold networking certifications, and built an encrypted P2P messaging app as my final year project just because the problem was interesting.</p>
+        <div class="tags">
+          <span class="tag">Cybersecurity</span><span class="tag">Networking</span>
+          <span class="tag">Android Dev</span><span class="tag">Home Labbing</span>
+          <span class="tag">Generative AI</span><span class="tag">Self-hosting</span>
+          <span class="tag">Kotlin</span><span class="tag">Python</span>
+          <span class="tag">Linux</span><span class="tag">Palo Alto · CCNA</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTS -->
+  <div class="wrap">
+    <section class="proj-sec" id="projects">
+      <div class="sec-label">Projects</div>
+      <div class="proj-grid">
+
+        <div class="proj-card full">
+          <div class="proj-icon">🔐</div>
+          <div class="proj-title">Yumin — Secure Mesh Messaging</div>
+          <div class="proj-desc">A serverless, peer-to-peer encrypted messaging app for Android. Devices discover each other via Bluetooth and Wi-Fi Direct — no internet required. Messages secured with AES-256 GCM and RSA-4096, keys in hardware-backed Android KeyStore. Custom isolated keyboard and one-tap data purge included.</div>
+          <div class="proj-tags">
+            <span class="ptag">Kotlin</span><span class="ptag">Android</span>
+            <span class="ptag">AES-256 GCM</span><span class="ptag">RSA-4096</span>
+            <span class="ptag">Google Nearby API</span><span class="ptag">P2P Mesh</span>
+          </div>
+          <a href="https://yumin-drab.vercel.app" class="proj-link" target="_blank" rel="noopener">
+            View project <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 10L10 2M4 2h6v6"/></svg>
+          </a>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-icon">🖥️</div>
+          <div class="proj-title">Self-Hosted Cloud Ecosystem</div>
+          <div class="proj-desc">Repurposed old Android phones and a laptop into a personal cloud. Nextcloud for storage and sync, SSH via Termux for remote terminal access — zero monthly fees.</div>
+          <div class="proj-tags"><span class="ptag">Nextcloud</span><span class="ptag">Termux</span><span class="ptag">SSH</span><span class="ptag">Linux</span></div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-icon">🌐</div>
+          <div class="proj-title">Enterprise Network Lab</div>
+          <div class="proj-desc">Simulated enterprise network topologies in EVE-NG and VMware. Configured Palo Alto firewalls, VLANs, inter-VLAN routing, and LAN/WAN environments.</div>
+          <div class="proj-tags"><span class="ptag">EVE-NG</span><span class="ptag">VMware</span><span class="ptag">PAN-OS</span><span class="ptag">VLANs</span></div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-icon">🔍</div>
+          <div class="proj-title">Python Network Scanner</div>
+          <div class="proj-desc">CLI tool for host discovery and port scanning using Python's socket and scapy. Built to understand how tools like Nmap operate at packet level.</div>
+          <div class="proj-tags"><span class="ptag">Python</span><span class="ptag">Scapy</span><span class="ptag">Networking</span></div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-icon">🛡️</div>
+          <div class="proj-title">Linux System Hardening Lab</div>
+          <div class="proj-desc">Applied security hardening — UFW rules, SSH key auth, service minimisation, user permission management. Documented as a personal reference guide.</div>
+          <div class="proj-tags"><span class="ptag">Linux</span><span class="ptag">UFW</span><span class="ptag">SSH</span><span class="ptag">Security</span></div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-icon">📡</div>
+          <div class="proj-title">Wireshark Traffic Analysis</div>
+          <div class="proj-desc">Captured and dissected live traffic — TCP/IP handshakes, DNS, ARP, HTTP. Used filters to isolate protocol behaviour and detect anomalous patterns.</div>
+          <div class="proj-tags"><span class="ptag">Wireshark</span><span class="ptag">TCP/IP</span><span class="ptag">Protocol Analysis</span></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT -->
+  <div class="wrap">
+    <section class="contact-sec" id="contact">
+      <div class="sec-label">Contact</div>
+      <div class="contact-card">
+        <h2>Let's <span>connect</span></h2>
+        <p>Open to roles in cybersecurity, networking, and IT. Also happy to talk about interesting problems.</p>
+        <div class="contact-links">
+          <a href="mailto:greekyahya@gmail.com" class="btn solid">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 5l7 5 7-5"/></svg>
+            greekyahya@gmail.com
+          </a>
+          <a href="https://www.linkedin.com/in/mohammed-yahyaebrahim-shaikh-1897a327b/" target="_blank" rel="noopener" class="btn glass">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 2a1 1 0 110 2 1 1 0 010-2zM2 5h2v7H2V5zm4 0h2v1h.03C8.52 5.52 9.26 5 10.25 5 12.1 5 13 6.07 13 8v4h-2V8.5c0-.83-.32-1.5-1.13-1.5-.7 0-1.12.47-1.3.93-.07.18-.12.39-.12.57V12H6V5z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/greekyahya" target="_blank" rel="noopener" class="btn glass">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+          <a href="https://yumin-drab.vercel.app" target="_blank" rel="noopener" class="btn glass">🔐 Yumin</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Built by Yahya Shaikh &middot; Mumbai &middot; 2026</footer>
+
+</body>
+</html>
